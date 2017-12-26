@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+</head>
+
+<body>
+	<script type="text/javascript" src="node_modules/d3/build/d3.js"></script>
+	<script type="text/javascript" src="node_modules/d3-shape/build/d3-shape.js"></script>
+
+	<script type="text/javascript" src="node_modules/murmurhash3js/murmurhash3js.min.js"></script>
+
+	<script type="text/javascript" src="ring.js"></script>
+	<script type="text/javascript" src="dummy.js"></script>
+	<script type="text/javascript" src="modulo.js"></script>
+	<script type="text/javascript" src="consistent-hashing.js"></script>
+
+	<svg id="one" width="700" height="400" style="border: 1px solid;">
+	</svg>
+
+	<!--
+		https://github.com/pid/murmurHash3js
+
+		A Guide to Consistent Hashing: https://www.toptal.com/big-data/consistent-hashing
+
+		Consistent hashing by Michael Nielsen on June 3, 2009: http://michaelnielsen.org/blog/consistent-hashing/
+
+		Hashfunktion: https://de.wikipedia.org/wiki/Hashfunktion
+
+		Ein Internet of Everything (IoE) wird durch die Vernetzung von Personen, Prozessen, Daten und Dinge gebildet. Der Vorteil eines solchen Internet of Everything ist der, dass ein solches Internet Menschen, Geräte, Appliances und Prozesse, Daten und Sachen miteinander zu einem intelligenten Prozess verbindet. Der Zusammenhang darin besteht, dass beim Internet of Everything fast alles Online und über das Internet miteinander verbunden ist und dass die Bereitstellung der Daten in Echtzeit erfolgt.
+ 	-->
+
+	<script>
+		var root = d3.select("#one");
+
+		var selection = 3;
+
+		var hash;
+		if (selection == 1)
+			hash = new DummyDistribution(root);
+		else if (selection == 2)
+			hash = new ModuloNDistribution(root);
+		else
+			hash = new ConsistentHashing(root);
+
+		if (selection == 2 || selection == 3) {
+			hash.addServer(1, "Server A");
+			hash.addServer(22, "Server B");
+
+			for (const [index, value] of Array(5).entries())
+				hash.addData(index, "Data " + index);
+			hash.triggerRedraw();
+
+			d3.timeout(() => {
+				hash.addServer(333, "Server C");
+				hash.triggerRedraw();
+
+				d3.timeout(() => {
+					hash.addServer(4444, "Server D");
+					hash.triggerRedraw();
+
+					d3.timeout(() => {
+					//	hash.removeServer(1);
+					//	hash.triggerRedraw();
+					}, 5000);
+				}, 5000);
+			}, 5000);
+
+		} else {
+
+			hash.setServerData([{
+				startAngle: 1,
+				endAngle: 2,
+				color: "red"
+			}, {
+				startAngle: 3,
+				endAngle: 1 + (2 * Math.PI),
+				color: "grey"
+			}]);
+
+			hash.triggerRedraw();
+			//hash.setData(data);
+		}
+	</script>
+
+
+</body>
+
+</html>
