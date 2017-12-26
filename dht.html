@@ -18,6 +18,8 @@
 
 	<svg id="one" width="700" height="400" style="border: 1px solid;">
 	</svg>
+	<svg id="two" width="700" height="400" style="border: 1px solid;">
+	</svg>
 
 	<!--
 		https://github.com/pid/murmurHash3js
@@ -34,7 +36,7 @@
 	<script>
 		var root = d3.select("#one");
 
-		var selection = 3;
+		var selection = 2;
 
 		var hash;
 		if (selection == 1)
@@ -48,7 +50,7 @@
 			hash.addServer(1, "Server A");
 			hash.addServer(22, "Server B");
 
-			for (const [index, value] of Array(5).entries())
+			for (const [index, value] of Array(25).entries())
 				hash.addData(index, "Data " + index);
 			hash.triggerRedraw();
 
@@ -82,6 +84,7 @@
 			hash.triggerRedraw();
 			//hash.setData(data);
 		}
+
 	</script>
 
 

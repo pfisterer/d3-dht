@@ -50,7 +50,7 @@ class ModuloNDistribution extends Ring {
 			el.endAngle = nextSliceStart + sliceSize;
 			nextSliceStart = el.endAngle;
 
-			currentServer.color = this.colors[index % this.colors.length];
+			el.color = this.colors[index % this.colors.length];
 		});
 
 		//-----------------------------------------
