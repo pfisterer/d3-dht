@@ -6,6 +6,10 @@ class Ring {
 		this.data = [];
 		this.colors = ["#FB5012", "#17BEBB", "#F3A956", "#BAD80A", "#30360E"];
 		this.colors = ["#50514F", "#F25F5C", "#FFE066", "#73ABC2", "#70C1B3"];
+		this.width = rootSvgElement.attr("width");
+		this.height = rootSvgElement.attr("height");
+		this.maxRadius = 0.5 * Math.min(this.width, this.height);
+
 		this.setup();
 	}
 
@@ -13,11 +17,11 @@ class Ring {
 		this.rootSvgElement.selectAll("*").remove();
 
 		this.rootSvgElement.append("g")
-			.attr("transform", "translate(350, 200)")
+			.attr("transform", "translate(" + (this.width / 2) + ", " + (this.height / 2) + ")")
 			.classed("arc", true);
 
 		this.rootSvgElement.append("g")
-			.attr("transform", "translate(350, 200)")
+			.attr("transform", "translate(" + (this.width / 2) + ", " + (this.height / 2) + ")")
 			.classed("datalabels", true);
 	}
 
@@ -39,8 +43,8 @@ class Ring {
 		data = JSON.parse(JSON.stringify(data));
 
 		var arcGenerator = d3.arc()
-			.innerRadius(115)
-			.outerRadius(145)
+			.innerRadius(0.575 * this.maxRadius) //115
+			.outerRadius(0.725 * this.maxRadius)
 		//.padAngle(0.01)
 		//.padRadius(100)
 		//.cornerRadius(0);
@@ -105,11 +109,11 @@ class Ring {
 		data = JSON.parse(JSON.stringify(data));
 
 		var arcGenerator = d3.arc()
-			.innerRadius(120)
-			.outerRadius(140)
-			.padAngle(.02)
-			.padRadius(100)
-			.cornerRadius(4);
+			.innerRadius(0.6 * this.maxRadius)
+			.outerRadius(0.7 * this.maxRadius)
+		//.padAngle(.02)
+		//.padRadius(100)
+		//.cornerRadius(4);
 
 		function keyFunction(d) {
 			return d.id;
@@ -150,7 +154,7 @@ class Ring {
 		function annotationLineData(d, arc) {
 			var centroid = arcGenerator.centroid(d);
 
-			var scale = 1.1 + Math.abs(0.4 * Math.cos(d.startAngle));
+			var scale = 1.1 + Math.abs(0.35 * Math.cos(d.startAngle));
 
 			var middle = { x: centroid[0] * scale, y: centroid[1] * scale };
 			var end = {
@@ -215,10 +219,10 @@ class Ring {
 			.attr("text-anchor", d => textAnnotation(d, arcGenerator).x >= 0 ? "start" : "end")
 			.attr("alignment-baseline", "middle")
 			.attr("dx", d => textAnnotation(d, arcGenerator).x >= 0 ? 5 : -5)
+			.classed("textlabel", true)
 			.transition()
 			.duration(2000)
 			.style("fill-opacity", 1);
-
 
 		// Remove elements
 		var removeGroup = selection
