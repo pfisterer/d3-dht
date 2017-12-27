@@ -150,7 +150,7 @@ class Ring {
 		function annotationLineData(d, arc) {
 			var centroid = arcGenerator.centroid(d);
 
-			var scale = 1.25 + Math.abs(0.2 * Math.cos(d.startAngle));
+			var scale = 1.1 + Math.abs(0.4 * Math.cos(d.startAngle));
 
 			var middle = { x: centroid[0] * scale, y: centroid[1] * scale };
 			var end = {

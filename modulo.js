@@ -57,27 +57,31 @@ class ModuloNDistribution extends Ring {
 		//Redistribute data points
 		//-----------------------------------------
 
-		//Determine which data point is assigned to each server
-		var perServerData = Array(serverCount).fill(0).map(x => []);
-		this.data.forEach(el => {
-			var responsibleServer = el.id % serverCount;
-			perServerData[responsibleServer].push(el);
-		});
-
-		//Now distribute the data points in the slice for better visualization
-		perServerData.forEach((dataArray, serverIndex) => {
-			var dataElementsOnThisServer = dataArray.length;
-			var server = this.serverData[serverIndex];
-
-			var angleScale = d3.scaleLinear()
-				.domain([-1, dataElementsOnThisServer])
-				.range([server.startAngle, server.endAngle]);
-
-			dataArray.forEach((dataElement, dataIndex, dA) => {
-				dataElement.startAngle = angleScale(dataIndex);
-				dataElement.endAngle = angleScale(dataIndex);
+		if (serverCount > 0) {
+			//Determine which data point is assigned to each server
+			var perServerData = Array(serverCount).fill(0).map(x => []);
+			this.data.forEach(el => {
+				var responsibleServer = el.id % serverCount;
+				perServerData[responsibleServer].push(el);
 			});
-		});
+
+			//Now distribute the data points in the slice for better visualization
+			perServerData.forEach((dataArray, serverIndex) => {
+				var dataElementsOnThisServer = dataArray.length;
+				var server = this.serverData[serverIndex];
+
+				var angleScale = d3.scaleLinear()
+					.domain([-1, dataElementsOnThisServer])
+					.range([server.startAngle, server.endAngle]);
+
+				dataArray.forEach((dataElement, dataIndex, dA) => {
+					dataElement.startAngle = angleScale(dataIndex);
+					dataElement.endAngle = angleScale(dataIndex);
+				});
+			});
+		} else {
+			this.data = [];
+		}
 	}
 
 }
